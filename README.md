@@ -1697,3 +1697,794 @@ UNDERSTAND
 ```
 
 **Do not use CI as the fucking IDE.**
+
+---
+
+# 43. Pull Kikiam and Bootstrap It as a Notion MCP Harness
+
+This section is the transfer procedure for another ChatGPT account, engineer, or agent that needs to adopt Kikiam as a **durable Notion-backed engineering harness** without inheriting a persona.
+
+The goal is not to paste a giant README into Notion and call it automation.
+
+The goal is to establish this topology:
+
+```text
+                         HUMAN AUTHORITY
+                                │
+                                ▼
+                      CHATGPT / MODEL SESSION
+                         reasoning/orchestration
+                                │
+             ┌──────────────────┴──────────────────┐
+             │                                     │
+             ▼                                     ▼
+       SESSION VM / SHELL                    NOTION MCP
+       executable workspace              semantic control plane
+             │                                     │
+             ▼                                     ▼
+          GIT REPO                         requirements / ADRs
+      executable truth                    project context / tasks
+             │                            evidence index / incidents
+             ▼                                     │
+       LOCAL EVIDENCE                              │
+             │                                     │
+             └──────────────────┬──────────────────┘
+                                ▼
+                         COMMITTED CANDIDATE
+                                │
+                                ▼
+                              CI
+                       clean reproduction
+                                │
+                                ▼
+                              QA
+                                │
+                                ▼
+                      AUTHORIZED PROMOTION
+                                │
+                                ▼
+                              CD
+                                │
+                                ▼
+                     RUNTIME / OPERATIONS
+```
+
+**Git remains executable truth. Notion becomes the semantic and decision control plane.**
+
+Notion must never be treated as proof of the current branch, current SHA, passing tests, CI status, deployed version, database state, or runtime health. Those claims must be revalidated from their authoritative systems.
+
+## 43.1 Prerequisites
+
+Before attempting the bootstrap, the target ChatGPT/account should have, where available:
+
+- GitHub/repository access to `Kirch-Nairu/kikiam-harness`.
+- A controllable session VM/container/shell for normal VM-first engineering.
+- Git installed in that workspace.
+- A connected Notion MCP/connector with permission to create and update the intended workspace/pages.
+- A dedicated Notion parent page or workspace area for the harness.
+- Human authority to create the control-plane structure.
+
+If Notion write access is unavailable, the agent may still read and adopt the Git harness, but it must report that Notion bootstrap is `BLOCKED` or `READ-ONLY` rather than pretending it created a control plane.
+
+## 43.2 Pull the canonical harness into the session VM
+
+Do this in the **session VM**, not in GitHub Actions.
+
+```bash
+git clone https://github.com/Kirch-Nairu/kikiam-harness.git
+cd kikiam-harness
+
+git fetch --all --prune
+git checkout main
+git pull --ff-only origin main
+
+git status
+git remote -v
+git rev-parse HEAD
+git log -1 --oneline
+```
+
+Record the resulting `HEAD` SHA. That SHA is the fingerprint for the harness doctrine being imported.
+
+The agent must then read `README.md` completely before constructing the Notion control plane.
+
+Do not summarize five headings and assume the rest.
+
+Do not import from an old chat transcript when the repository is available.
+
+Do not let an old Notion copy override the current Git version.
+
+## 43.3 Required bootstrap fingerprint
+
+Before writing to Notion, establish:
+
+```text
+harness_repository: Kirch-Nairu/kikiam-harness
+harness_branch: main
+harness_sha: <exact git rev-parse HEAD>
+harness_status: <status declared by README>
+bootstrap_timestamp: <current timestamp>
+bootstrap_actor: <account/agent performing bootstrap>
+notion_target: <target page/workspace>
+mode: NORMAL | DEGRADED | READ-ONLY
+```
+
+Store the exact `harness_sha` in Notion. A Notion harness without a canonical Git SHA cannot prove which doctrine it represents.
+
+## 43.4 Do not build one giant garbage page
+
+The Notion representation should be layered and operational.
+
+Recommended root:
+
+```text
+KIKIAM — ENGINEERING CONTROL PLANE
+│
+├── 00 — Harness Doctrine
+│   ├── Canonical Operating Model
+│   ├── Authority + Risk Model
+│   ├── VM-First Execution Doctrine
+│   ├── Evidence Classes
+│   ├── CI / QA / CD Doctrine
+│   ├── DevOps + Operations Doctrine
+│   └── Maintenance + Incident Doctrine
+│
+├── 01 — Projects
+├── 02 — Task Contracts
+├── 03 — Architecture Decisions / ADRs
+├── 04 — Engineering Runs / Evidence
+├── 05 — Releases + Deployments
+├── 06 — Incidents + Postmortems
+├── 07 — Maintenance + Operations
+├── 08 — Technical Debt
+├── 09 — Runbooks
+└── 10 — Harness Evolution
+```
+
+The global doctrine should remain stable. Project-specific state belongs in project records, not mixed into the global harness page.
+
+## 43.5 Canonical Notion databases
+
+A serious Notion MCP harness should use structured databases instead of relying only on prose pages.
+
+### Projects database
+
+Recommended properties:
+
+```text
+Project
+Status
+Repository
+Default Branch
+Canonical / Accepted SHA
+Product Owner
+Technical Authority
+Risk Level
+Environment(s)
+Architecture Page
+Active Release
+Last Engineering Run
+Last Verified At
+Operational Status
+Known Limitations
+```
+
+### Task Contracts database
+
+Recommended properties:
+
+```text
+Task ID
+Project
+Objective
+Authority Level
+Risk Level
+Base Branch
+Base SHA
+Working Branch
+Allowed Scope
+Forbidden Scope
+Acceptance Criteria
+Required Local Gates
+Required Runtime Journey
+CI Required
+QA Required
+Deployment Authority
+Stop Conditions
+Status
+Final SHA
+```
+
+### Architecture Decisions / ADR database
+
+Recommended properties:
+
+```text
+ADR ID
+Project
+Decision
+Context
+Options Considered
+Trade-offs
+Consequences
+Status
+Owner
+Date
+Affected Components
+Supersedes
+Superseded By
+```
+
+### Engineering Runs / Evidence database
+
+Recommended properties:
+
+```text
+Run ID
+Project
+Task Contract
+Repository
+Base SHA
+Final SHA
+Working Branch
+Execution Environment
+Local Verification
+Runtime Observation
+CI Reproduction
+QA Result
+Capability State
+Final Status
+Known Limitations
+NOT RUN / BLOCKED
+Timestamp
+```
+
+### Releases + Deployments database
+
+Recommended properties:
+
+```text
+Release ID
+Project
+Release SHA
+Artifact ID
+Target Environment
+Migration Required
+Backup State
+Rollback Procedure
+Release Authority
+CI State
+QA State
+Deployment State
+Health Check
+Smoke Test
+Post-Deploy Status
+Deployed At
+```
+
+### Incidents database
+
+Recommended properties:
+
+```text
+Incident ID
+Project
+Severity
+Detected At
+Production SHA
+Environment
+Symptom
+Impact
+Containment
+Root Cause
+Recovery
+Verification
+Missing Control
+Regression Test
+Harness Change Required
+Status
+Owner
+```
+
+### Maintenance database
+
+Recommended properties:
+
+```text
+Maintenance ID
+Project
+Category
+Risk
+Due Date
+Owner
+Current State
+Evidence Required
+Evidence Result
+Affected Version / SHA
+Rollback / Recovery Notes
+Completed At
+Next Review
+```
+
+Not every small project needs every field. The structure may be reduced proportionally, but the distinction between **intent, executable state, verification, runtime, and operations evidence must survive**.
+
+## 43.6 What Notion owns and what it does not own
+
+Use this authority map:
+
+```text
+NOTION OWNS / PRESERVES
+- product intent
+- requirements
+- business rules
+- architecture decisions
+- task contracts
+- human approvals
+- project context
+- release intent
+- runbooks
+- incident learning
+- maintenance planning
+- evidence indexes / links
+
+GIT OWNS
+- code
+- branches
+- ancestry
+- exact commits
+- migrations
+- repository configuration
+- executable implementation state
+
+SESSION VM OWNS TEMPORARY EXECUTION EVIDENCE
+- local builds
+- local tests
+- local runtime
+- local browser/API/database checks
+
+CI OWNS REPRODUCTION EVIDENCE
+- clean committed-state verification
+
+RUNTIME / OBSERVABILITY OWNS
+- deployed behavior
+- health
+- logs
+- telemetry
+- production effects
+```
+
+If these sources disagree, do not vote between them. Resolve the claim using the authoritative source for that truth domain.
+
+## 43.7 MCP bootstrap behavior
+
+When a Notion MCP/connector is available, the agent should use it directly to create the control-plane structure.
+
+The agent should:
+
+1. Pull and fingerprint the Git harness first.
+2. Inspect the destination Notion workspace/page before writing.
+3. Reuse an existing Kikiam control plane when it is clearly the same canonical workspace instead of creating duplicates.
+4. Create the root hierarchy and databases deliberately.
+5. Preserve the doctrine's terminology rather than paraphrasing it into generic AI-management language.
+6. Record the canonical Git SHA on the root Harness Doctrine page.
+7. Separate global harness doctrine from project-specific context.
+8. Create relations between Projects, Tasks, ADRs, Runs, Releases, Incidents, and Maintenance when the Notion tooling supports it.
+9. Create useful views where supported, such as Active Projects, Blocked Tasks, High-Risk Work, Pending Deployment, Open Incidents, and Maintenance Due.
+10. Report anything the MCP cannot create exactly instead of silently inventing success.
+
+The MCP is a control-plane interface. It is not executable proof.
+
+## 43.8 Recommended Notion page header
+
+The root Harness Doctrine page should visibly carry something equivalent to:
+
+```text
+Kikiam Harness V3
+VM-First Autonomous Engineering Operating System
+
+Canonical repository:
+https://github.com/Kirch-Nairu/kikiam-harness
+
+Canonical branch:
+main
+
+Canonical harness SHA:
+<exact imported SHA>
+
+Harness maturity:
+CANDIDATE | VERIFIED | ACCEPTED | CANONICAL
+
+Last synchronized:
+<timestamp>
+
+Authority rule:
+Git is executable truth. Notion is intent / semantic / decision truth.
+Current repository, CI, deployment, and runtime claims must be revalidated from their authoritative systems.
+```
+
+## 43.9 Project context template inside Notion
+
+Each project should have a compact engineering context page linked from the Projects database.
+
+Recommended structure:
+
+```text
+PROJECT IDENTITY
+- name
+- repository
+- purpose
+- owners / authority
+
+PRODUCT INTENT
+- users
+- problem
+- business outcome
+- success criteria
+- non-goals
+
+DOMAIN
+- entities
+- invariants
+- workflows
+- permissions
+
+ARCHITECTURE
+- components
+- dependency direction
+- data ownership
+- integrations
+- failure boundaries
+
+ENVIRONMENTS
+- local
+- CI
+- staging
+- production
+
+ENGINEERING AUTHORITY
+- protected branches
+- accepted baseline SHA
+- deployment authority
+- destructive-operation authority
+
+VERIFICATION
+- local gates
+- CI gates
+- QA expectations
+- runtime journeys
+
+OPERATIONS
+- observability
+- backup / restore
+- rollback
+- maintenance
+- incident/runbook links
+
+CURRENT STATE
+- current accepted release
+- current known limitations
+- open risks
+```
+
+Do not store a stale `current HEAD` in Notion and blindly trust it later. Revalidate Git state whenever execution depends on it.
+
+## 43.10 Sync protocol — Git doctrine to Notion
+
+At the beginning of a serious harness-sync session:
+
+```text
+1. Open the session VM.
+2. Fetch/pull `Kirch-Nairu/kikiam-harness` with `--ff-only`.
+3. Record the exact main SHA.
+4. Read the current README doctrine.
+5. Read the Notion root's recorded harness SHA.
+6. Compare Git SHA vs Notion recorded SHA.
+7. If equal: no doctrine sync required.
+8. If different: inspect the Git diff between the recorded SHA and current main.
+9. Update only the Notion doctrine/structure affected by those accepted changes.
+10. Set Notion's canonical harness SHA to the new SHA only after the sync succeeds.
+11. Record sync timestamp and any BLOCKED/unsupported changes.
+```
+
+Do **not** update the Notion fingerprint first and then attempt the sync. The fingerprint is evidence of completed synchronization, not intent to synchronize.
+
+## 43.11 Sync protocol — project execution state
+
+Notion may index project state, but before executing repository work the agent must still establish actual state from Git and other authoritative systems.
+
+Example:
+
+```text
+NOTION SAYS:
+accepted baseline = abc123
+
+ACTUAL GIT SAYS:
+main = def456
+
+RESULT:
+DO NOT ASSUME EITHER IS "CLOSE ENOUGH".
+Investigate why they differ and apply the project's authority rules.
+```
+
+The same applies to CI, releases, deployments, incidents, and runtime health.
+
+## 43.12 First-time bootstrap prompt for another ChatGPT account
+
+Paste the following into the target ChatGPT account after GitHub and Notion access are connected:
+
+```text
+BOOTSTRAP KIKIAM AS MY NOTION MCP ENGINEERING HARNESS
+
+Canonical harness repository:
+https://github.com/Kirch-Nairu/kikiam-harness.git
+
+This is an execution task, not a request to merely summarize the README.
+
+PHASE 1 — CAPABILITY DISCOVERY
+
+First establish which capabilities you actually have:
+- session VM / writable filesystem
+- shell
+- Git
+- GitHub repository access
+- Notion MCP/connector read access
+- Notion MCP/connector write access
+
+Do not fake unavailable capabilities.
+
+PHASE 2 — PULL CANONICAL HARNESS
+
+If a session VM exists, use it as the development/inspection workspace.
+
+Clone or update the repository directly in the VM:
+
+git clone https://github.com/Kirch-Nairu/kikiam-harness.git
+cd kikiam-harness
+git fetch --all --prune
+git checkout main
+git pull --ff-only origin main
+git status
+git rev-parse HEAD
+git log -1 --oneline
+
+If the repository is already present, inspect it and update it safely instead of cloning a duplicate.
+
+Read README.md completely.
+Record the exact canonical harness SHA.
+
+Do NOT use GitHub Actions as the development/inspection workstation when a controllable session VM exists.
+
+PHASE 3 — ADOPT THE OPERATING MODEL
+
+Adopt the repository's engineering doctrine as the operating model for relevant software engineering work.
+
+Do not adopt a persona.
+Do not rename yourself Kikiam/Kirion.
+Adopt the workflow, authority model, evidence model, branch discipline, VM-first execution, CI/QA/CD separation, DevOps, maintenance, incident response, and handoff discipline.
+
+PHASE 4 — BUILD THE NOTION CONTROL PLANE
+
+Using the connected Notion MCP/connector, create or normalize a Notion root named:
+
+KIKIAM — ENGINEERING CONTROL PLANE
+
+Build a clean hierarchy for:
+- Harness Doctrine
+- Projects
+- Task Contracts
+- Architecture Decisions / ADRs
+- Engineering Runs / Evidence
+- Releases + Deployments
+- Incidents + Postmortems
+- Maintenance + Operations
+- Technical Debt
+- Runbooks
+- Harness Evolution
+
+Use structured Notion databases where appropriate rather than dumping everything into one page.
+
+Create relations between records where the connector supports them.
+
+PHASE 5 — WRITE CANONICAL FINGERPRINT
+
+On the Harness Doctrine root, record:
+- repository
+- canonical branch
+- exact harness SHA
+- harness maturity/status
+- sync timestamp
+- bootstrap mode
+
+The exact Git SHA is mandatory.
+
+PHASE 6 — AUTHORITY BOUNDARIES
+
+Preserve these rules:
+
+Git = executable truth.
+Notion = intent / semantic / decision control plane.
+Session VM = primary engineering execution environment.
+CI = independent committed-state reproduction.
+QA = adversarial evidence.
+CD = deployment only with authority.
+Runtime/observability = observed production truth.
+
+Notion must never be treated as proof of current Git HEAD, CI success, deployment success, database state, or runtime health without revalidation.
+
+PHASE 7 — VERIFY THE NOTION HARNESS
+
+After building it, inspect what actually exists in Notion.
+Verify:
+- root hierarchy exists
+- canonical Git SHA is recorded
+- required databases/pages exist
+- database properties are useful and not generic junk
+- project/task/evidence/release/incident/maintenance concepts are separated
+- no duplicate control plane was accidentally created
+- no unsupported connector action was falsely reported as successful
+
+PHASE 8 — HANDOFF
+
+Return:
+
+HARNESS REPOSITORY
+HARNESS BRANCH
+HARNESS SHA
+
+EXECUTION ENVIRONMENT
+
+NOTION TARGET
+
+NOTION STRUCTURE CREATED / REUSED
+
+DATABASES CREATED / REUSED
+
+RELATIONS / VIEWS CREATED
+
+CANONICAL FINGERPRINT
+
+ADOPTED OPERATING RULES
+
+NOT RUN / BLOCKED / UNSUPPORTED
+
+KNOWN LIMITATIONS
+
+NEXT SAFE ACTION
+
+Do the work directly using available tools. Do not turn me into the terminal operator for commands you can execute yourself.
+```
+
+## 43.13 Per-project enrollment prompt
+
+Once the global Notion control plane exists, a new repository can be enrolled with:
+
+```text
+ENROLL THIS PROJECT INTO THE KIKIAM HARNESS
+
+Repository:
+<repository URL>
+
+Use the canonical Kikiam harness and the existing Notion Engineering Control Plane.
+
+1. Establish actual repository state in the session VM.
+2. Read project documentation, CI, tests, deployment files, and existing engineering instructions.
+3. Do not modify code during enrollment unless explicitly asked.
+4. Create/update the Project record in Notion.
+5. Create a Project Engineering Context page.
+6. Record product intent, domain rules, architecture, environments, engineering authority, verification gates, DevOps/runtime expectations, maintenance requirements, known limitations, and open risks.
+7. Link existing ADRs, incidents, releases, runbooks, and evidence where available.
+8. Record current Git facts only with their exact SHA and timestamp.
+9. Mark anything not established as UNKNOWN rather than guessing.
+10. Return an enrollment handoff and identify the next safe engineering action.
+```
+
+## 43.14 Daily/normal use after bootstrap
+
+Once bootstrapped, the human should be able to issue objectives rather than terminal keystrokes.
+
+Example:
+
+```text
+Continue <project>.
+
+Objective:
+<objective>
+
+Use the Kikiam harness and the project context in Notion.
+Establish actual repository state before relying on Notion's cached state.
+Use the session VM for implementation and local verification.
+Use an isolated branch/worktree.
+Stop on authority conflicts.
+Push only a locally verified candidate.
+Inspect CI as independent reproduction.
+Run QA proportional to risk.
+Do not deploy unless explicitly authorized.
+Update the relevant Notion task/evidence/decision records after the run.
+Return the standard engineering handoff.
+```
+
+That should be enough context for the agent to execute the actual lifecycle without the human repeatedly explaining branch discipline, evidence classes, CI/CD boundaries, deployment safety, or handoff structure.
+
+## 43.15 Notion is not a second Git repository
+
+Do not copy every source file, commit, build log, or CI log into Notion.
+
+Store durable meaning and references:
+
+```text
+GOOD:
+Task contract + exact base/final SHA + verification summary + evidence link
+
+BAD:
+20,000 lines of raw build output pasted into a Notion page
+```
+
+Use Notion for high-value durable engineering context. Keep raw executable truth and large machine evidence in the systems that own them.
+
+## 43.16 Avoid autonomous doctrine drift
+
+The Notion MCP agent may improve layout, relations, views, and navigation, but it must not silently rewrite Kikiam's engineering doctrine.
+
+A doctrine change follows the Harness Evolution rules:
+
+```text
+OBSERVED NEED
+→ PROPOSED CHANGE
+→ REVIEW / EVIDENCE
+→ GIT CHANGE
+→ ACCEPTED COMMIT
+→ NOTION SYNC
+```
+
+Not:
+
+```text
+MODEL FELT LIKE REWORDING IT
+→ NOTION BECOMES DIFFERENT
+→ NOBODY KNOWS WHICH HARNESS IS REAL
+```
+
+The Git repository is the canonical doctrine source.
+
+## 43.17 Optional future automation
+
+The Notion synchronization layer may later be automated further with scheduled or event-driven workers, but the automation must preserve the authority model.
+
+A future sync worker may:
+
+- detect a new accepted harness SHA,
+- compute doctrine changes,
+- update the Notion doctrine pages,
+- refresh the recorded harness fingerprint,
+- create a sync evidence record,
+- report unsupported mappings.
+
+It must not:
+
+- promote an unaccepted harness change,
+- rewrite project truth from stale documentation,
+- mark CI/runtime/deployment evidence as passing without querying the authoritative system,
+- perform production deployment as a side effect of documentation sync.
+
+A Notion MCP harness is valuable because it gives the reasoning layer **durable, queryable engineering context**. It does not replace Git, the VM, CI, QA, CD, or runtime observation.
+
+## 43.18 Final Notion MCP doctrine
+
+```text
+PULL GIT FIRST
+→ FINGERPRINT EXACT HARNESS SHA
+→ READ CANONICAL DOCTRINE
+→ HYDRATE / SYNC NOTION CONTROL PLANE
+→ KEEP GLOBAL AND PROJECT CONTEXT SEPARATE
+→ EXECUTE ENGINEERING IN SESSION VM
+→ RECORD EXACT GIT CANDIDATES
+→ REPRODUCE IN CI
+→ ATTACK WITH QA
+→ PROMOTE WITH AUTHORITY
+→ DEPLOY THROUGH CD
+→ OBSERVE RUNTIME
+→ WRITE DURABLE DECISIONS / EVIDENCE BACK TO NOTION
+→ REVALIDATE BEFORE THE NEXT RUN
+```
+
+**Notion gives the model durable engineering memory. It does not get to manufacture engineering truth.**
